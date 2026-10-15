@@ -8,6 +8,7 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:auth": "playwright test --project=chromium",
+    "test:api": "playwright test --project=chromium tests/api",
     "report": "playwright show-report"
   },
   "devDependencies": {

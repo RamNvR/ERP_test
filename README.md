@@ -26,12 +26,13 @@ The Playwright `setup` project signs in once per run and saves browser state to 
 
 ```bash
 npm test
+npm run test:api
 npm run test:headed
 npm run test:ui
 npm run report
 ```
 
-The setup project requires valid credentials. Each module has its own spec and reuses the saved login state; the shared `appPage` fixture navigates to the application. The Company, Customer, People, Product Category, Product, Invoice, and Payment specs create records through the authenticated application API and verify the resulting records in their UI tables. Workflows create any required related records first (for example, a person and customer before an invoice, or a customer and invoice before a payment). These tests use typed entity models, readable unique test-data factories, page objects, and shared API helpers. API mocks are available for scenarios that need deterministic endpoint responses; they are not used for live create workflows.
+The setup project requires valid credentials. Each module has its own spec and reuses the saved login state; the shared `appPage` fixture navigates to the application. UI/list checks live in `tests/*.spec.ts`; API create-and-verify workflows are separated into module-specific specs under `tests/api/`. Those authenticated API tests verify the response and the created record in its UI table, creating related records first where required. Run just those workflows with `npm run test:api`. The tests use typed entity models, readable unique test-data factories, page objects, and shared API helpers. API mocks are available for scenarios that need deterministic endpoint responses; they are not used for live create workflows.
 
 ## Project structure
 
@@ -42,7 +43,8 @@ The setup project requires valid credentials. Each module has its own spec and r
 - `src/helpers/`: environment, form interaction, and optional API route mocking helpers.
 - `src/fixtures/fixtures.ts`: typed page-object fixtures and shared application-page navigation.
 - `tests/auth.setup.ts`: creates the shared authenticated browser storage state.
-- `tests/*.spec.ts`: individual module specs, including selected live create-and-verify workflows.
+- `tests/*.spec.ts`: individual module UI and list specs.
+- `tests/api/*.spec.ts`: module-specific live API create-and-verify specs.
 - `specs/idurar-erp-test-plan.md`: scenario-level functional coverage plan.
 - `.github/agents/`: official Playwright planner, generator, and healer agent modes.
 
