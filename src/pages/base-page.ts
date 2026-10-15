@@ -5,6 +5,7 @@ export abstract class BasePage {
   protected readonly menuButton: Locator;
   protected readonly table: Locator;
   protected readonly form: FormFields;
+  private readonly successMessage: Locator;
   private readonly locator: {
     link: (name: string | RegExp, exact?: boolean) => Locator;
     button: (name: string | RegExp) => Locator;
@@ -15,6 +16,11 @@ export abstract class BasePage {
     this.menuButton = page.getByRole('button', { name: 'menu' });
     this.table = page.getByRole('table');
     this.form = new FormFields(page);
+    this.successMessage = page
+      .locator(
+        '.ant-message-notice-content, .ant-notification-notice-message, [role="alert"]',
+      )
+      .filter({ hasText: /success|created|saved/i });
     this.locator = {
       link: (name, exact = false) => page.getByRole('link', { name, exact }),
       button: (name) => page.getByRole('button', { name }),
@@ -34,6 +40,17 @@ export abstract class BasePage {
   async expectListAtRoute(path: string): Promise<void> {
     await expect.poll(() => new URL(this.page.url()).pathname).toBe(path);
     await expect(this.table).toBeVisible();
+  }
+
+  async expectCreatedRecord(value: string): Promise<void> {
+    await expect(this.successMessage.last()).toBeVisible();
+    await this.expectRecordInTable(value);
+  }
+
+  async expectRecordInTable(value: string): Promise<void> {
+    await expect(
+      this.table.getByRole('row').filter({ hasText: value }).first(),
+    ).toBeVisible();
   }
 
   async expectVisibleHeading(name: string | RegExp): Promise<void> {

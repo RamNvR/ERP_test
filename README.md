@@ -31,7 +31,7 @@ npm run test:ui
 npm run report
 ```
 
-The setup project requires valid credentials. Each module has its own spec and reuses the saved login state; tests navigate to the application before interacting with it. The module tests currently verify list navigation, while CRUD methods are available on each corresponding page object and can be composed into workflow tests using `testData`.
+The setup project requires valid credentials. Each module has its own spec and reuses the saved login state; the shared `appPage` fixture navigates to the application. The Company, Customer, People, Product Category, Product, Invoice, and Payment specs create records through the authenticated application API and verify the resulting records in their UI tables. Workflows create any required related records first (for example, a person and customer before an invoice, or a customer and invoice before a payment). These tests use typed entity models, readable unique test-data factories, page objects, and shared API helpers. API mocks are available for scenarios that need deterministic endpoint responses; they are not used for live create workflows.
 
 ## Project structure
 
@@ -40,9 +40,9 @@ The setup project requires valid credentials. Each module has its own spec and r
 - `src/models/enterprise.ts`: typed business entities used by test workflows.
 - `src/data/test-data.ts`: isolated, unique data factories.
 - `src/helpers/`: environment, form interaction, and optional API route mocking helpers.
-- `tests/fixtures.ts`: typed `pages` fixture that provides every page object for specs and setup.
+- `src/fixtures/fixtures.ts`: typed page-object fixtures and shared application-page navigation.
 - `tests/auth.setup.ts`: creates the shared authenticated browser storage state.
-- `tests/*.spec.ts`: individual Login, Dashboard, Language, Company, People, Customer, Product Category, Product, Invoice, and Payment specs.
+- `tests/*.spec.ts`: individual module specs, including selected live create-and-verify workflows.
 - `specs/idurar-erp-test-plan.md`: scenario-level functional coverage plan.
 - `.github/agents/`: official Playwright planner, generator, and healer agent modes.
 

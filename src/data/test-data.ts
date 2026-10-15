@@ -9,7 +9,7 @@ import type {
 } from '../models/enterprise';
 
 const unique = (value: string) =>
-  `${value}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+  `${value} - ${new Date().toISOString().replace(/[:.]/g, '-')}`;
 
 export const testData = {
   company: (): Company => ({
@@ -17,7 +17,7 @@ export const testData = {
     contactName: '',
     email: `${unique('company')}@example.test`,
     phone: '+1 202 555 0147',
-    country: 'United States',
+    country: '',
     website: 'www.example.test',
   }),
   person: (): Person => ({
@@ -38,6 +38,8 @@ export const testData = {
   productCategory: (): ProductCategory => ({
     name: unique('E2E Category'),
     description: 'Automated test category',
+    color: 'default',
+    enabled: true,
   }),
   product: (): Product => ({
     name: unique('E2E Product'),
@@ -46,11 +48,13 @@ export const testData = {
     description: 'Automated test product',
   }),
   invoice: (): Invoice => ({
-    number: Math.floor(Date.now() % 100_000),
+    number: Math.floor(Date.now() / 1000),
     year: new Date().getFullYear(),
     clientName: 'Test Customer',
-    date: '31/12/2030',
-    expireDate: '31/01/2031',
+    date: new Date().toISOString().slice(0, 10),
+    expireDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10),
     itemName: unique('E2E Item'),
     itemDescription: 'Automated test invoice item',
     quantity: 1,
@@ -58,11 +62,12 @@ export const testData = {
     note: 'Automated test invoice',
   }),
   payment: (): Payment => ({
-    number: unique('E2E Payment'),
+    number: Math.floor(Date.now() / 1000),
     clientName: 'Test Customer',
     amount: 125,
-    date: '2030-12-31',
-    mode: 'Cash',
+    date: new Date().toISOString().slice(0, 10),
+    paymentModeName: 'Default Payment',
     reference: unique('E2E Reference'),
+    description: 'Automated test payment',
   }),
 };

@@ -23,6 +23,8 @@ export interface Customer extends Person {
 export interface ProductCategory {
   name: string;
   description: string;
+  color: string;
+  enabled: boolean;
 }
 
 export interface Product {
@@ -46,10 +48,11 @@ export interface Invoice {
 }
 
 export interface Payment {
-  number: string;
+  number: number;
   clientName: string;
   amount: number;
   date: string;
-  mode: string;
+  paymentModeName: string;
   reference: string;
+  description: string;
 }

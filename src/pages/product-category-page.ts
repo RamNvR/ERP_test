@@ -5,11 +5,13 @@ import { BasePage } from './base-page';
 export class ProductCategoryPage extends BasePage {
   private readonly nameField: Locator;
   private readonly descriptionField: Locator;
+  private readonly colorField: Locator;
 
   constructor(page: Page) {
     super(page);
     this.nameField = this.form.field('name');
     this.descriptionField = this.form.field('description');
+    this.colorField = this.form.field('color');
   }
 
   async open(): Promise<void> {
@@ -28,6 +30,7 @@ export class ProductCategoryPage extends BasePage {
       'description',
       category.description,
     );
+    await this.form.choose(this.colorField, 'color', category.color);
     await this.clickAction(/save|submit/i);
   }
 }
