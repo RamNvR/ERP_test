@@ -10,7 +10,7 @@ The initial automated suite includes public login/language checks and authentica
 
 1. Set `BASE_URL` to the target environment (defaults to `https://cloud.idurarapp.com`).
 2. Set `APP_EMAIL` and `APP_PASSWORD` for authenticated tests.
-3. Use a dedicated test tenant/account with permission to view and create test records.
+3. Use a dedicated test tenant/account with permission to view, create, and delete test records.
 4. Configure reference entities needed by dependent workflows before running create tests: Company/People, Customer, Product Category, Product, Invoice, then Payment.
 5. Use unique values from `testData` and do not run create/update/delete scenarios against production data.
 
@@ -71,6 +71,7 @@ Observed application navigation and route targets:
 2. **Search customers** — Search by the unique test customer name or email.
 3. **Create and edit a customer** — Save valid identity, contact, address, and company details; update and verify a field.
 4. **Validate customer form** — Verify required-field and invalid-email validation.
+5. **Delete a customer** — Verify canceling the confirmation preserves the record and confirming deletion removes it.
 
 ### Product Category
 

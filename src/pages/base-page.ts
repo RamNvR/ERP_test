@@ -53,6 +53,46 @@ export abstract class BasePage {
     ).toBeVisible();
   }
 
+  async expectRecordNotInTable(value: string): Promise<void> {
+    await expect(
+      this.table.getByRole('row').filter({ hasText: value }),
+    ).toHaveCount(0);
+  }
+
+  async deleteRecordFromTable(value: string, confirm: boolean): Promise<void> {
+    const row = this.table.getByRole('row').filter({ hasText: value }).first();
+    await expect(row).toBeVisible();
+
+    const deleteAction = row
+      .getByRole('button', { name: /delete/i })
+      .or(
+        row.locator(
+          'button[title*="delete" i], button[aria-label*="delete" i], ' +
+            '[role="button"][title*="delete" i], [role="button"][aria-label*="delete" i], ' +
+            'button:has(svg[data-icon="delete"]), button:has(.anticon-delete)',
+        ),
+      )
+      .first();
+    await deleteAction.click();
+
+    const confirmation = this.page.locator(
+      '.ant-popover:visible, .ant-modal:visible',
+    ).last();
+    await expect(confirmation).toBeVisible();
+    const action = confirm
+      ? confirmation.getByRole('button', {
+          name: /^(delete|ok|yes|confirm)$/i,
+        })
+      : confirmation.getByRole('button', { name: /^(cancel|no)$/i });
+    await action.click();
+
+    if (confirm) {
+      await this.expectRecordNotInTable(value);
+    } else {
+      await expect(row).toBeVisible();
+    }
+  }
+
   async expectVisibleHeading(name: string | RegExp): Promise<void> {
     await expect(this.locator.heading(name).first()).toBeVisible();
   }
